@@ -29,10 +29,12 @@
     <!-- Navbar -->
     <nav class="bg-blue-600 p-4 text-white flex justify-between">
         <div>
-            <h1 class="text-3xl font-bold">AI Blog Generator</h1>
+            <a href="/" class="text-3xl font-bold">AI Blog Generator</a>
         </div>
         <div>
-            <a href="#" class="text-white hover:underline">Logout</a>
+            <a href="#" class="text-white hover:underline">Welcome {{user.username}} | </a>
+            <a href="/blog-list" class="text-white hover:underline">Saved Blog Posts |</a>
+            <a href="logout" class="text-white hover:underline">Logout</a>
         </div>
         </nav>
 
@@ -67,7 +69,7 @@
             
             <!-- section for loading circle -->
             
-            <div  id="loadingCircle" class="load mt-10">
+            <div style="display:none" id="loadingCircle" class="load mt-10">
 
             </div>
            
@@ -89,16 +91,61 @@
     <footer class="text-center p-4 text-black mt-4">
         Powered by <a href="https://www.youtube.com/watch?v=ftKiHCDVwfA&t=57s">Code with Timm</a>
     </footer>
+    
 
     <script>
+        document.getElementById('generateBlogButton').addEventListener('click',async()=> 
+    {
+        const youtubelink = document.getElementById('youtubelink').value;
+        const loadingindicator = document.getElementById('loadingCircle');
+        const blogContent = document.getElementById('blogContent');
 
+        if (youtubelink)
+        {
+         loadingindicator.style.display = 'block';
+         loadingindicator.classList.remove('hidden');
+         blogContent.innerHTML = '';    // Clear previous content
+
+         const endpointUrl = 'generate-blog';
+
+        try {
+            const response = await fetch(endpointUrl, {
+                method: 'POST',
+                headers: {'Content-type': 'application/json',
+
+                },
+                body: JSON.stringify({link: youtubelink})
+            });
+            
+            const data = await response.json();
+
+            blogContent.innerHTML = data.content;
+            loadingindicator.classList.add('hidden');
+
+            
+        } catch (error) {
+            console.error("Error occured",error);
+            alert("Something went wrong. Please try again later");
+            loadingindicator.classList.add('hidden');
+
+        }
+        loadingindicator.style.display = 'none'
+
+
+
+        }
+        else{alert('Please enter a youtube link')}
+            
+
+
+    });
+
+    
     </script>
-
 
 
 </body>
 </html>
-
 
 
 
